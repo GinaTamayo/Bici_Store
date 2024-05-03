@@ -13,6 +13,9 @@ let auth = async (req: Request, res: Response) => {
         if (result[0].length > 0){
           const isPasswordValid = await bcrypt.compare(contrasena, result[0][0].contrasena);
           if (isPasswordValid){
+            res.cookie("token", token, {
+              httpOnly: true
+            });
             return res.status(200).json({ 
               status: 'Successful authentication',
               AccesToken : token
@@ -23,7 +26,7 @@ let auth = async (req: Request, res: Response) => {
           status: 'Incorrect username or password'
         });
       } catch (error) {
-        return res.status(500).send({ errorInfo: "Ha ocurrido un error interno del servidor.", error });
+        return res.status(500).send({ errorInfo: "Ha ocurrido un error en el servidor.", error });
       }
 }
 

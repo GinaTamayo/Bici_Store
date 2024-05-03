@@ -2,10 +2,13 @@ import bcrypt from 'bcryptjs';
 import UserRepository from '../repositories/UserRepository';
 import User from '../Dto/UserDto';
 import { Request, Response } from "express";
+import validateEmail from '../Helpers/validateEmail';
 
 
 let register = async (req: Request, res: Response) => {
   try {
+    //let email: string = req.body;
+
     const {
       numeroDocumento,
       nombre,
@@ -14,8 +17,13 @@ let register = async (req: Request, res: Response) => {
       email,
       password,
       confirmPassword
-    } = req.body;
+    }  = req.body;
 
+
+
+    if (!validateEmail(email)) {
+      return res.status(400).send({ error: 'El correo no cumple con los requerimientos necesarios' });
+    }
     if (confirmPassword != password) {
       return res.status(400).send({ error: 'La contraseña no coincide' });
     }
