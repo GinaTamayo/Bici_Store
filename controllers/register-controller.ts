@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
 import UserRepository from '../repositories/UserRepository';
 import User from '../Dto/UserDto';
+import UserService from '../services/UserServices';
 import { Request, Response } from "express";
-import validateEmail from '../Helpers/validateEmail';
+import validateEmail from '../middleware/validateEmail';
 
 
 let register = async (req: Request, res: Response) => {
@@ -28,12 +29,11 @@ let register = async (req: Request, res: Response) => {
       return res.status(400).send({ error: 'La contraseña no coincide' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const result = await UserRepository.add(new User(numeroDocumento, nombre, apellido, telefono, email, hashedPassword));
+    
+    const result = await UserService.register(new User(numeroDocumento, nombre, apellido, telefono, email, password));
     
     return res.status(201).send(
-      { status: 'register ok', password_hasheado: hashedPassword }
+      { status: 'register ok'}
     );
 
   } catch (error: any) {

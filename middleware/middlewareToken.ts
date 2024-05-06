@@ -3,17 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function createToken(correo: string) {
-    try {
-        const secret = process.env.SECRET ?? 'SECRET'; 
-        const payload = { correo };
-        return jwt.sign(payload, secret, { expiresIn: '60m' });
-    } catch (error) {
-        throw new Error('Error create token');
-    }
-}
-
-
 async function validateToken(accessToken: string | undefined): Promise<void> {
     const secret = process.env.SECRET ?? 'SECRET' 
     if (!accessToken) {
@@ -26,4 +15,4 @@ async function validateToken(accessToken: string | undefined): Promise<void> {
         throw new Error('Access denied, token expired or incorrect');
     }
 }
-export default {createToken, validateToken};
+export default validateToken;

@@ -3,15 +3,18 @@ const db = require('../config/config-db.js');
 
 import { Request, Response } from "express";
 import UserRepository from '../repositories/UserRepository';
-import middlewareToken from '../middleware/middlewareToken'
+import Auth from "../Dto/AuthDto";
+import createToken from "../Helpers/generateToken";
+import dotenv from "dotenv";
+dotenv.config();
 
 let auth = async (req: Request, res: Response) => {
       try {
-        const {correo, contrasena} = req.body;
-        const result: any = await UserRepository.auth(correo, contrasena);
-        const token = middlewareToken.createToken(correo);
+        const {email, password} = req.body;
+        const result: any = await UserRepository.auth(new Auth(email, password));
+        const token = createToken(email);
         if (result[0].length > 0){
-          const isPasswordValid = await bcrypt.compare(contrasena, result[0][0].contrasena);
+          const isPasswordValid = await bcrypt.compare(password, result[0][0].password);
           if (isPasswordValid){
             res.cookie("token", token, {
               httpOnly: true

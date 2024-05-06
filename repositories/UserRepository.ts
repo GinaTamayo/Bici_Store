@@ -1,5 +1,7 @@
 import db from '../config/config-db';
 import User from '../Dto/UserDto';
+import Auth from '../Dto/AuthDto';
+import Profile from '../Dto/ProfileDto';
 
 class UserRepository {
 
@@ -9,15 +11,15 @@ class UserRepository {
         return db.execute(sql, values);
     }
 
-    static async auth(email: string, password: string){
+    static async auth(auth: Auth){
         const sql = 'SELECT password FROM users WHERE email=?';
-        const values: Array<string> = [email];
+        const values: Array<string> = [auth.email];
         return db.execute(sql, values);
     }
 
-    static async updateProfile(numeroDocumento: string, nombre: string, apellido: string, telefono: string, numeroDocumentoAntiguo: string){
+    static async updateProfile(profile: Profile){
         const sql = 'UPDATE users SET numeroDocumento = ?, nombre = ?, apellido = ?, telefono = ? WHERE numeroDocumento = ?';
-        const values = [numeroDocumento, nombre, apellido, telefono, numeroDocumento, numeroDocumentoAntiguo];
+        const values = [profile.numeroDocumento, profile.nombre, profile.apellido, profile.telefono, profile.numeroDocumentoAntiguo];
         return db.execute(sql, values);
     }
 }

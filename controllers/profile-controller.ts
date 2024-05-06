@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import UserRepository from "../repositories/UserRepository";
-import middlewareToken from "../middleware/middlewareToken";
-import User from '../Dto/UserDto';
+import Profile from "../Dto/ProfileDto";
+import validateToken from "../middleware/middlewareToken";
 
 let updateProfile = async (req: Request, res: Response) =>{
+
     try {
         const token = req.cookies.token;
-        const decoded = await middlewareToken.validateToken(token);
-        const { numeroDocumento, nombre, apellido, telefono,  numeroDocumentoAntiguo} = req.body;
-        await UserRepository.updateProfile(numeroDocumento, nombre, apellido, telefono,  numeroDocumentoAntiguo);
+        const decoded = await validateToken(token);
+        const { numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo} = req.body;
+        const result = await UserRepository.updateProfile(new Profile(numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo));
 
         return res.status(200).json({
             status: 'success',
@@ -23,4 +24,4 @@ let updateProfile = async (req: Request, res: Response) =>{
     }
 }
 
-export default { updateProfile }
+export default updateProfile;
