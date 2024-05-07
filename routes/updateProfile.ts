@@ -4,6 +4,6 @@ import validateToken from "../middleware/middlewareToken"
 
 const router = express.Router();
 
-router.put('/', validateToken, updateProfile);
+router.put('/', updateProfile);
 
 export default router;

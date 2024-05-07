@@ -5,7 +5,10 @@ import Profile from "../Dto/ProfileDto";
 let updateProfile = async (req: Request, res: Response) => {
     try {
         const { numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo } = req.body;
-        await ProfileService.updateProfile(new Profile(numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo));
+        const token = req.cookies.token;
+        console.log(token);
+         
+        await ProfileService.updateProfile(new Profile(numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo), token);
         return res.status(200).json({
             status: 'success',
             message: 'Profile updated successfully'

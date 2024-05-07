@@ -4,6 +4,7 @@ import morgan from "morgan"
 import register from './routes/register';
 import auth from './routes/auth';
 import updateProfile from './routes/updateProfile'
+import cookieParser from 'cookie-parser';
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -11,6 +12,7 @@ dotenv.config();
 const app = express().use(bodyParser.json());
 
 app.use(morgan('dev'))
+app.use(cookieParser())
 app.use('/register', register);
 app.use('/auth', auth);
 app.use('/updateProfile', updateProfile);

@@ -7,6 +7,9 @@ let login = async (req: Request, res: Response) => {
         const { email, password } = req.body;
         
         const accessToken = await AuthService.login(new Auth(email, password));
+        res.cookie('token', accessToken, {
+          httpOnly: true
+        })
         return res.status(200).json({
             status: 'Successful authentication',
             accessToken

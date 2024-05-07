@@ -11,7 +11,7 @@ class AuthService {
             const isPasswordValid = await bcrypt.compare(password, result[0][0].password);
             if (isPasswordValid) {
                 const token = createToken(email);
-                return { accessToken: token };
+                return token;
             }
         }
         throw new Error('Incorrect username or password');
