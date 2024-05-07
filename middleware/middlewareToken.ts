@@ -3,17 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function createToken(correo: string) {
-    try {
-        const secret = process.env.SECRET ?? 'SECRET'; 
-        const payload = { correo };
-        return jwt.sign(payload, secret, { expiresIn: '60m' });
-    } catch (error) {
-        throw new Error('Error create token');
-    }
-}
-
-
 async function validateToken(accessToken: string | undefined): Promise<void> {
     const secret = process.env.SECRET ?? 'SECRET' 
     if (!accessToken) {
@@ -26,4 +15,45 @@ async function validateToken(accessToken: string | undefined): Promise<void> {
         throw new Error('Access denied, token expired or incorrect');
     }
 }
-export default {createToken, validateToken};
+export default validateToken;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*// middleware/middlewareToken.ts
+
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const validateToken = async (req: Request, res: Response, next: NextFunction) => {
+    const accessToken = req.headers.authorization?.split(' ')[1]; // Obtiene el token del encabezado de autorización
+
+    if (!accessToken) {
+        return res.status(401).json({ message: 'Access denied. Token missing.' });
+    }
+
+    try {
+        const secret = process.env.SECRET ?? 'SECRET';
+        await jwt.verify(accessToken, secret); // Verifica el token JWT
+        console.log('Token is correct');
+        next(); // Si el token es válido, pasa al siguiente middleware o controlador
+    } catch (err) {
+        return res.status(403).json({ message: 'Access denied. Invalid token.' });
+    }
+};
+
+export default validateToken;
+*/ 

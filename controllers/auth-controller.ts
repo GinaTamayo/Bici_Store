@@ -1,33 +1,25 @@
-const bcrypt = require("bcryptjs");
-const db = require('../config/config-db.js');
-
 import { Request, Response } from "express";
-import UserRepository from '../repositories/UserRepository';
-import middlewareToken from '../middleware/middlewareToken'
+import AuthService from "../services/AuthServices";
+import Auth from "../Dto/AuthDto";
 
-let auth = async (req: Request, res: Response) => {
-      try {
-        const {correo, contrasena} = req.body;
-        const result: any = await UserRepository.auth(correo, contrasena);
-        const token = middlewareToken.createToken(correo);
-        if (result[0].length > 0){
-          const isPasswordValid = await bcrypt.compare(contrasena, result[0][0].contrasena);
-          if (isPasswordValid){
-            res.cookie("token", token, {
-              httpOnly: true
-            });
-            return res.status(200).json({ 
-              status: 'Successful authentication',
-              AccesToken : token
-            });
-          }
-        }
-        return res.status(401).json({ 
-          status: 'Incorrect username or password'
+let login = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        
+        const accessToken = await AuthService.login(new Auth(email, password));
+        res.cookie('token', accessToken, {
+          httpOnly: true
+        })
+        return res.status(200).json({
+            status: 'Successful authentication',
+            accessToken
         });
-      } catch (error) {
-        return res.status(500).send({ errorInfo: "Ha ocurrido un error en el servidor.", error });
-      }
+    } catch (error) {
+        return res.status(401).json({ 
+            status: 'Incorrect username or password'
+        });
+    }
 }
 
-export default auth;
+export default login;
+ 
