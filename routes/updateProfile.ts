@@ -1,9 +1,9 @@
 import express from "express";
-import middlewareToken from "../middleware/middlewareToken";
-import updateProfileController from "../controllers/profile-controller";
 import updateProfile from "../controllers/profile-controller";
+import validateToken from "../middleware/middlewareToken"
+
 const router = express.Router();
 
-router.put('/', updateProfile);
+router.put('/', validateToken, updateProfile);
 
 export default router;
