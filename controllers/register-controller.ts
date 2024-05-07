@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-import UserRepository from '../repositories/UserRepository';
 import User from '../Dto/UserDto';
 import UserService from '../services/UserServices';
 import { Request, Response } from "express";
@@ -8,7 +6,6 @@ import validateEmail from '../middleware/validateEmail';
 
 let register = async (req: Request, res: Response) => {
   try {
-    //let email: string = req.body;
 
     const {
       numeroDocumento,
