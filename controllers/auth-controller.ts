@@ -4,12 +4,18 @@ import Auth from "../Dto/AuthDto";
 
 let login = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        const { 
+          email, 
+          password 
+        } = req.body;
         
         const accessToken = await AuthService.login(new Auth(email, password));
+        
         res.cookie('token', accessToken, {
-          httpOnly: true
-        })
+            httpOnly: true
+          })
+        
+        
         return res.status(200).json({
             status: 'Successful authentication',
             accessToken

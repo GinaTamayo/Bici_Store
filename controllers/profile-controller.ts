@@ -4,19 +4,25 @@ import Profile from "../Dto/ProfileDto";
 
 let updateProfile = async (req: Request, res: Response) => {
     try {
-        const { numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo } = req.body;
-        const token = req.cookies.token;
-        console.log(token);
+        const { 
+            numeroDocumento, 
+            nombre, 
+            apellido, 
+            telefono, 
+            numeroDocumentoAntiguo 
+        } = req.body;
          
-        await ProfileService.updateProfile(new Profile(numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo), token);
+        await ProfileService.updateProfile(new Profile(numeroDocumento, nombre, apellido, telefono, numeroDocumentoAntiguo));
+
         return res.status(200).json({
             status: 'success',
             message: 'Profile updated successfully'
         });
-    } catch (error) {
+    } catch (error:any) {
         return res.status(500).json({
             status: 'error',
-            message: 'Failed to update profile'
+            message: 'Failed to update profile',
+            error: error.message
         });
     }
 }
