@@ -1,11 +1,15 @@
 import User from '../Dto/UserDto';
 import UserService from '../services/UserServices';
 import { Request, Response } from "express";
-import validateEmail from '../middleware/validateEmail';
-import validatePassword from '../Helpers/validatePassword';
+import { validationResult } from 'express-validator'; 
 
 let register = async (req: Request, res: Response) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const {
       numeroDocumento,
       nombre,
@@ -16,13 +20,7 @@ let register = async (req: Request, res: Response) => {
       confirmPassword
     }  = req.body;
 
-    if (!validateEmail(email)) {
-      return res.status(400).send({ error: 'El correo no cumple con los requerimientos necesarios' });
-    }
-
-    if (!validatePassword(password, confirmPassword)) {
-      return res.status(400).send({ error: 'La contraseña no coincide' });
-    }
+    
 
     await UserService.register(new User(numeroDocumento, nombre, apellido, telefono, email, password));
     

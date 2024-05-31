@@ -18,7 +18,7 @@ const validateToken = async (req: Request, res: Response, next: NextFunction) =>
         if (!token) {
             return res.status(401).json(
                 { status: 'you have not sent a token' }
-            );
+  ,           );
         };
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;            

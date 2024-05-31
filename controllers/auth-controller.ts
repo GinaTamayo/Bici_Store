@@ -1,9 +1,16 @@
 import { Request, Response } from "express";
 import AuthService from "../services/AuthServices";
 import Auth from "../Dto/AuthDto";
+import { validationResult } from 'express-validator'; 
+
 
 let login = async (req: Request, res: Response) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+
         const { 
           email, 
           password 
